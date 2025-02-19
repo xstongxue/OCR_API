@@ -1,4 +1,4 @@
-from fastapi import APIRouter, File, Form, UploadFile,HTTPException
+from fastapi import APIRouter, File, Form, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.responses import StreamingResponse
 from starlette.responses import RedirectResponse
@@ -10,9 +10,11 @@ import base64
 import cv2
 import json
 import re
+import time
 
 from config import *
 from utils import *
+from db_utils import insert_ocr_data
 
 app_routers = APIRouter()
 @app_routers.get("/")
@@ -30,7 +32,7 @@ async def qwen7bvl_ocr(img: UploadFile = File(...)):
     Args:
         img (UploadFile): 上传的图像文件
     Returns:
-        JSONResponse: 包含 OCR 结果的 JSON 响应
+        JSONResponse: 包含 OCR 结果的 JSON 响应 
     """
     result = {"success": False}
 
@@ -56,6 +58,11 @@ async def qwen7bvl_ocr(img: UploadFile = File(...)):
 
     # 调用 OCR API
     ocr_text = await call_ocr(img_content, prompt_ocr, qwen_VL_url, headers)
+
+    # Insert data into the database
+    db_success = insert_ocr_data(image_name, img_content, None, ocr_text)
+    if not db_success:
+        print("Failed to insert data into the database")
 
     ret_json = {
         'code': 200,
@@ -83,7 +90,7 @@ async def ocr(payload: OcrRequest):
     Args:
         payload (OcrRequest): 包含图像 base64 编码和 box 信息的请求体
     Returns:
-        JSONResponse: 包含 OCR 识别结果的 JSON 响应
+        JSONResponse: 包含 OCR 识别结果的 JSON 响应 
     Raises:
         HTTPException: 如果输入无效或 OCR 处理失败
     """
@@ -108,6 +115,14 @@ async def ocr(payload: OcrRequest):
         
         # Call OCR model
         ocr_text = await call_ocr(img_content, prompt_ocr, qwen_VL_url, headers)
+
+        # Create a unique image name
+        image_name = f"croped_image_{int(time.time())}"
+
+        # Insert data into the database
+        db_success = insert_ocr_data(image_name, img_content, payload.box, ocr_text)
+        if not db_success:
+            print("Failed to insert data into the database")
         
         # Prepare response
         ret_json = {
@@ -122,6 +137,7 @@ async def ocr(payload: OcrRequest):
         raise HTTPException(status_code=400, detail=f"Invalid input: {str(e)}")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"OCR 处理失败: {str(e)}")
+    
 # ======================================  OCR-MiniCPM2.6-V-8B(用于测试未擦除的原图像)  =====================================
 @app_routers.post("/OCR-MiniCPM2.6-V-8B")
 async def minicpm_ocr(img: UploadFile = File(...)):
@@ -130,7 +146,7 @@ async def minicpm_ocr(img: UploadFile = File(...)):
     Args:
         img (UploadFile): 上传的图像文件
     Returns:
-        JSONResponse: 包含 OCR 结果的 JSON 响应
+        JSONResponse: 包含 OCR 结果的 JSON 响应 
     """
     result = {"success": False}
 
@@ -175,6 +191,12 @@ async def minicpm_ocr(img: UploadFile = File(...)):
     try:
         response = requests.post(url, json=data)
         response_json = response.json()["response"]
+
+        # Insert data into the database
+        db_success = insert_ocr_data(image_name, img_content, None, response_json)
+        if not db_success:
+            print("Failed to insert data into the database")
+
         ret_json = {
             'code': 200,
             'message': '成功',

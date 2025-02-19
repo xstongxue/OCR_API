@@ -1,0 +1,71 @@
+=====================================================
+Loading Seg model and FastAPI starting server...
+Please wait until server has fully started
+=====================================================
+INFO:     Started server process [56569]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8899 (Press CTRL+C to quit)
+Connected to MySQL database
+Data inserted successfully
+MySQL connection is closed
+INFO:     192.168.4.189:57792 - "POST /OCR-QWen2.5-7B-VL HTTP/1.1" 200 OK
+Connected to MySQL database
+Data inserted successfully
+MySQL connection is closed
+INFO:     192.168.4.189:57793 - "POST /OCR-QWen2.5-7B-VL HTTP/1.1" 200 OK
+Connected to MySQL database
+Data inserted successfully
+MySQL connection is closed
+INFO:     192.168.4.189:58000 - "POST /OCR-QWen2.5-7B-VL HTTP/1.1" 200 OK
+Connected to MySQL database
+Data inserted successfully
+MySQL connection is closed
+INFO:     192.168.4.189:58002 - "POST /OCR-QWen2.5-7B-VL HTTP/1.1" 200 OK
+Connected to MySQL database
+Data inserted successfully
+MySQL connection is closed
+INFO:     192.168.4.189:58003 - "POST /OCR-QWen2.5-7B-VL HTTP/1.1" 200 OK
+Connected to MySQL database
+Data inserted successfully
+MySQL connection is closed
+INFO:     192.168.4.189:58430 - "POST /OCR-QWen2.5-7B-VL HTTP/1.1" 200 OK
+Connected to MySQL database
+Data inserted successfully
+MySQL connection is closed
+INFO:     192.168.4.189:58431 - "POST /OCR-QWen2.5-7B-VL HTTP/1.1" 200 OK
+Connected to MySQL database
+Data inserted successfully
+MySQL connection is closed
+INFO:     192.168.4.189:58625 - "POST /OCR-QWen2.5-7B-VL HTTP/1.1" 200 OK
+Connected to MySQL database
+Data inserted successfully
+MySQL connection is closed
+INFO:     192.168.4.189:58626 - "POST /OCR-QWen2.5-7B-VL HTTP/1.1" 200 OK
+Connected to MySQL database
+Data inserted successfully
+MySQL connection is closed
+INFO:     192.168.4.189:58627 - "POST /OCR-QWen2.5-7B-VL HTTP/1.1" 200 OK
+Connected to MySQL database
+Data inserted successfully
+MySQL connection is closed
+INFO:     192.168.4.189:58708 - "POST /OCR-QWen2.5-7B-VL HTTP/1.1" 200 OK
+INFO:     192.168.4.189:58710 - "POST /OCR-QWen2.5-7B-VL HTTP/1.1" 500 Internal Server Error
+Connected to MySQL database
+Data inserted successfully
+MySQL connection is closed
+INFO:     192.168.4.189:58709 - "POST /OCR-QWen2.5-7B-VL HTTP/1.1" 200 OK
+INFO:     192.168.4.189:58821 - "OPTIONS /OCR-QWen2.5-7B-VL HTTP/1.1" 200 OK
+INFO:     192.168.4.189:58822 - "OPTIONS /OCR-QWen2.5-7B-VL HTTP/1.1" 200 OK
+Connected to MySQL database
+Data inserted successfully
+MySQL connection is closed
+INFO:     192.168.4.189:58821 - "POST /OCR-QWen2.5-7B-VL HTTP/1.1" 200 OK
+Connected to MySQL database
+Data inserted successfully
+MySQL connection is closed
+INFO:     192.168.4.189:58823 - "POST /OCR-QWen2.5-7B-VL HTTP/1.1" 200 OK
+Connected to MySQL database
+Data inserted successfully
+MySQL connection is closed
+INFO:     192.168.4.189:58822 - "POST /OCR-QWen2.5-7B-VL HTTP/1.1" 200 OK

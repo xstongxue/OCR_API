@@ -2,36 +2,64 @@
 
 ## 简介
 
-本项目是一个基于 FastAPI 的 OCR API，用于从图像中提取文本。它支持多种 OCR 模型，并提供了易于使用的接口。
+本项目是一个基于 FastAPI 的 OCR API，用于从图像中提取文本，并将提取结果存储到 MySQL 数据库中。它支持多种 OCR 模型，并提供了易于使用的接口。
 
 ## 特性
 
-- 支持 QWen2.5-VL-7B-Instruct 和 MiniCPM2.6-V-8B 模型
-- 可以处理印刷体和手写体
-- 忽略图像中被划掉或涂改的部分
-- 支持通过 HTTP 接口上传图像或传递 base64 编码的图像数据
-- 异步 OCR 处理，避免阻塞主线程
-
-## 待实现
-
-- 增加数据库: 存放图像来源、版面分析坐标和识别结果等
+-   支持 QWen2.5-VL-7B-Instruct 和 MiniCPM2.6-V-8B 模型
+-   可以处理印刷体和手写体
+-   忽略图像中被划掉或涂改的部分
+-   支持通过 HTTP 接口上传图像或传递 base64 编码的图像数据
+-   异步 OCR 处理，避免阻塞主线程
+-   将图像来源、版面分析坐标和识别结果存储到 MySQL 数据库
 
 ## 依赖
 
-- fastapi
-- uvicorn
-- opencv-python
-- Pillow
-- pydantic
-- requests
-- ultralytics
+-   fastapi
+-   uvicorn
+-   opencv-python
+-   Pillow
+-   pydantic
+-   requests
+-   ultralytics
+-   mysql-connector-python
+-   mysql: 5.7.42-0ubuntu0.18.04.1
+
+## 数据库配置
+
+本项目使用 MySQL 数据库存储 OCR 结果。请确保已安装 MySQL 数据库，并配置以下信息：
+
+-   **主机**: `192.168.4.56`
+-   **端口**: `3306`
+-   **数据库名**: `xs_ocr_ret`
+-   **用户名**: `root`
+-   **密码**: `*******`
+-   **测试表**: `my_test`
+
+数据库表结构如下：
+
+```sql
+CREATE TABLE xs_ocr_ret (
+    img_id INT AUTO_INCREMENT PRIMARY KEY,  # 图像 ID
+    img_name VARCHAR(255), # 图像文件名
+    url MEDIUMTEXT,  # 图像 base64 编码
+    crop_box TEXT,  # 前端传递的 box 信息
+    ocr_text TEXT  # 提取的文本
+);
+```
 
 ## 快速开始
 
 1.  安装依赖：
 
 ```shell
-pip install fastapi uvicorn opencv-python Pillow pydantic requests ultralytics
+pip install fastapi uvicorn opencv-python Pillow pydantic requests ultralytics mysql-connector-python
+```
+
+或者
+
+```shell
+npm install mysql
 ```
 
 2.  启动服务：
@@ -55,9 +83,17 @@ bash ocr_start.sh
 -   **请求参数**:
     -   `img` (UploadFile): 上传的图像文件。
 -   **返回**:
-    -   `code` (int): 状态码，200 表示成功。
-    -   `message` (str): 消息，"成功" 表示操作成功。
-    -   `ocr` (str): 提取的文本。
+
+```json
+{
+  "code": 200,
+  "message": "成功",
+  "ocr": "提取的文本"
+}
+```
+
+-   **数据库操作**:
+    -   将 `img_name` (图像文件名), `url` (图像 base64 编码), `crop_box` (None), 和 `ocr` (提取的文本) 存储到 `xs_ocr_ret` 表中。
 
 ### 2.  /OCR-QWen2.5-7B-VL
 
@@ -87,6 +123,9 @@ bash ocr_start.sh
 }
 ```
 
+-   **数据库操作**:
+    -   将 `img_name` (frontend_image_{timestamp}), `url` (图像 base64 编码), `crop_box` (前端传递的 box 信息), 和 `ocr_text` (提取的文本) 存储到 `xs_ocr_ret` 表中。
+
 ### 3.  /OCR-MiniCPM2.6-V-8B
 
 -   **方法**: POST
@@ -102,6 +141,9 @@ bash ocr_start.sh
   "ocr": "提取的文本"
 }
 ```
+
+-   **数据库操作**:
+    -   将 `img_name` (图像文件名), `url` (图像 base64 编码), `crop_box` (None), 和 `ocr` (提取的文本) 存储到 `xs_ocr_ret` 表中。
 
 ## 配置
 
@@ -154,5 +196,6 @@ print(response.json())
 ## 注意事项
 
 -   确保 OCR 服务已启动并可访问。
+-   确保 MySQL 数据库已启动并可访问，并且已创建 `xs_ocr_ret` 表。
 -   根据您的硬件配置选择合适的设备。
 -   根据需要调整 OCR 模型的参数。
