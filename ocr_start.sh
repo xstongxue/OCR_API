@@ -10,10 +10,14 @@ fi
 # 激活环境
 source /opt/conda/etc/profile.d/conda.sh
 conda activate my_yolo
+
 # 运行
 device=cpu # 指定设备
-port=8899 # 端口号
+port=8899  # 端口号
 nohup python ocr_start.py \
   --device ${device} \
   --port ${port} \
 > ocr_start.log 2>&1 &
+
+# 记录当前的 PID
+echo $! > ocr_start.pid
